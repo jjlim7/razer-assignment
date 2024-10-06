@@ -1,5 +1,4 @@
 import csv
-import openai
 from typing import List, Dict
 from fuzzywuzzy import fuzz
 from flask import current_app
@@ -7,6 +6,9 @@ from app.openai_client import openai_client
 
 
 def load_csv_data(file_path: str) -> List[Dict]:
+    """
+    Utility function to load game csv data
+    """
     data = []
     with open(file_path, "r", encoding="utf-8") as file:
         csv_reader = csv.DictReader(file)
@@ -17,7 +19,8 @@ def load_csv_data(file_path: str) -> List[Dict]:
 
 def get_relevant_context(query: str) -> str:
     """
-    Get relevant context from games_data
+    Get relevant context from games_data.
+    Relevance is checked using fuzzywuzzy on the games' name, short description, and genre.
     """
     game_data = current_app.config["GAME_DATA"]
 
@@ -40,6 +43,9 @@ def get_relevant_context(query: str) -> str:
 
 
 async def generate_response(query: str, context: str) -> str:
+    """
+    Generate OpenAI GPT response given query and with the relevant context.
+    """
     prompt = f"Query: {query}\n\nResponse:"
     response = await openai_client.get_client().chat.completions.create(
         model="gpt-4o",
