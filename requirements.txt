@@ -1,0 +1,7 @@
+pytest
+pytest-asyncio
+python-Levenshtein
+fuzzywuzzy
+python-dotenv
+flask[async]
+openai
